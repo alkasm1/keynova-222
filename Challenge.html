@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Keynova — Challenge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .key {
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      background: #ff6a00;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #ff8000;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 8px;
+    }
+
+    .unlockBox {
+      display: none;
+      margin-top: 15px;
+      padding: 10px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      width: 280px;
+    }
+
+    .keyResult {
+      margin-top: 10px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Keynova Challenge</h1>
+
+  <!-- 🔐 المفتاح الأول -->
+  <div class="key">
+    <p>🧩 الحماية الرقمية ليست ما تعرفه...<br /> إنها تخفي شيئًا لم تره من قبل.</p>
+    <button class="btn" onclick="showUnlockBox('1')">🔓 قم بتحميل المفتاح</button>
+
+    <div id="unlockBox1" class="unlockBox">
+      <p>يتطلب إدخال المفتاح الخاص بالوصول:</p>
+      <input type="file" accept="image/*" id="keyImage1" onchange="checkKey1()">
+      <div id="keyResult1" class="keyResult"></div>
+    </div>
+
+    <p class="note">🔐 هذا الملف لا يُفتح إلا عند توفر المفتاح المناسب.</p>
+  </div>
+
+  <!-- 🔐 المفتاح الثاني -->
+  <div class="key">
+    <p>🧩 ليس كل ملف مغلق بحاجة إلى رقم سري...<br /> البعض يفتح فقط إذا كنت في المكان الصحيح، في الوقت الصحيح.</p>
+    <a href="assets/key2.pdf" target="_blank" class="btn">Access Encrypted Page 2</a>
+    <p class="note">🔐 This file is password-protected. Use your Keynova key to unlock it.</p>
+  </div>
+
+  <!-- 🔐 المفتاح الثالث -->
+  <div class="key">
+    <p>🧩 الاختراق ليس سهولة الوصول،<br /> بل خطأ في فهم ما تم بناؤه بشكل غير مألوف.</p>
+    <a href="assets/key3.pdf" target="_blank" class="btn">Access Encrypted Page 3</a>
+    <p class="note">🔐 This file is password-protected. Use your Keynova key to unlock it.</p>
+  </div>
+
+  <!-- 🔐 المفتاح الرابع -->
+  <div class="key">
+    <p>🧩 إن كنت تظن أنك قريب من الفتح... فربما ما زلت بعيدًا.<br /> لأن Keynova لا تلعب مع المفاتيح، بل تصنعها.</p>
+    <button class="btn" onclick="showUnlockBox('4')">🔓 قم بتحميل المفتاح</button>
+
+    <div id="unlockBox4" class="unlockBox">
+      <p>يتطلب إدخال المفتاح الخاص بالوصول:</p>
+      <input type="file" accept="image/*" id="keyImage4" onchange="checkKey4()">
+      <div id="keyResult4" class="keyResult"></div>
+    </div>
+
+    <p class="note">🔐 هذا الملف لا يُفتح إلا عند توفر المفتاح المناسب.</p>
+  </div>
+
+  <!-- 🏆 النهائي -->
+  <div class="key">
+    <p>🏆 🎉 أنت الفائز بهذه الثورة الجديدة في عالم التشفير<br /> مع Keynova</p>
+    <a href="assets/key5.pdf" target="_blank" class="btn">Access Encrypted Final Page</a>
+    <p class="note">🔐 This file is password-protected. Use your Keynova key to unlock it.</p>
+  </div>
+
+  <script>
+    function showUnlockBox(id) {
+      document.getElementById(`unlockBox${id}`).style.display = 'block';
+    }
+
+    function checkKey1() {
+      const file = document.getElementById('keyImage1').files[0];
+      if (!file) return;
+
+      const resultBox = document.getElementById('keyResult1');
+      if (file.name === "unlock.part01.png") {
+        resultBox.innerHTML = `<a href="assets/key1.pdf" target="_blank" style="color:lime;">📄 تم فتح الملف الأول بنجاح</a>`;
+      } else {
+        resultBox.innerHTML = `<span style="color:red;">🚫 المفتاح غير صالح.</span>`;
+      }
+    }
+
+    async function checkKey4() {
+      const file = document.getElementById('keyImage4').files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const buffer = new Uint8Array(e.target.result);
+        crypto.subtle.digest("SHA-256", buffer).then((hash) => {
+          const hex = Array.from(new Uint8Array(hash))
+            .map(b => b.toString(16).padStart(2, "0"))
+            .join("");
+
+          const resultBox = document.getElementById('keyResult4');
+          const masterHash = "2cb6792233fe38d66196100874c837fb6beb022d7bd749cb50bd4363f01b0d47";
+
+          if (hex === masterHash) {
+            resultBox.innerHTML = `<a href="assets/key4.pdf" target="_blank" style="color:lime;">📄 تم فتح الملف الرابع بنجاح</a>`;
+          } else {
+            resultBox.innerHTML = `<span style="color:red;">🚫 المفتاح غير صالح.</span><br>Hash المرفوع: ${hex}`;
+          }
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  </script>
+
+</body>
+</html>
